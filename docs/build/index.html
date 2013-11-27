@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to MorseCode’s documentation! &mdash; MorseCode 1.0.0 documentation</title>
+    <title>Introduction &mdash; MorseCode 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0',
+        VERSION:     '0.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,8 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="MorseCode 1.0.0 documentation" href="#" /> 
+    <link rel="top" title="MorseCode 0.0.1 documentation" href="#" />
+    <link rel="next" title="1. Morse API" href="morse.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +36,10 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="#">MorseCode 1.0.0 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="morse.html" title="1. Morse API"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">MorseCode 0.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -44,16 +48,38 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="welcome-to-morsecode-s-documentation">
-<h1>Welcome to MorseCode&#8217;s documentation!<a class="headerlink" href="#welcome-to-morsecode-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p><tt class="docutils literal"><span class="pre">morse</span></tt> is a Python package to generate Morse Code tones from Python code. &#8220;Morse code is
+a method of transmitting text information as a series of on-off tones, lights, or clicks that
+can be directly understood by a skilled listener or observer without special equipment&#8221; (from
+<a class="reference external" href="http://en.wikipedia.org/wiki/Morse_Code">http://en.wikipedia.org/wiki/Morse_Code</a>).</p>
+<p>It consists of the following main modules:</p>
 <ul class="simple">
+<li><tt class="docutils literal"><span class="pre">morse.code</span></tt>: This is the primary library for generaing tones. Using this module
+provides access to a writer and an audio object</li>
+<li><tt class="docutils literal"><span class="pre">morse.alphabet</span></tt>: This library lists the available alphabets which can be used to
+generate the output tones. Currently the only alphabet available is the &#8220;International&#8221;
+alphabet</li>
 </ul>
 </div>
-<span class="target" id="module-morse"></span></div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="documentation">
+<h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="morse.html">1. Morse API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="morse.html#telegraph">2. Telegraph</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="morse.html#telegraphwriter">2.1. TelegraphWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="morse.html#telegraphplayer">2.2. TelegraphPlayer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="morse.html#exceptions">3. Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">4. Changes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changes.html#version-0-1-2013-11-21">4.1. Version 0.1 (2013-11-21)</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
 <li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
@@ -69,12 +95,15 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Welcome to MorseCode&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#">Introduction</a></li>
+<li><a class="reference internal" href="#documentation">Documentation</a><ul>
 </ul>
 </li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
+  <h4>Next topic</h4>
+  <p class="topless"><a href="morse.html"
+                        title="next chapter">1. Morse API</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -106,7 +135,10 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="#">MorseCode 1.0.0 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="morse.html" title="1. Morse API"
+             >next</a> |</li>
+        <li><a href="#">MorseCode 0.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

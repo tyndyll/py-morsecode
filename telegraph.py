@@ -4,6 +4,7 @@ import optparse
 import morse.code
 import sys
 
+
 def print_file_formats():    
     print "\n".join(morse.code.available_file_formats())
     sys.exit(0)
@@ -12,8 +13,8 @@ o = optparse.OptionParser()
 o.add_option("-i", "--input", dest="input_filename")
 o.add_option("-e", "--encoding", default="vorbis", dest="output_encoding")
 o.add_option("-f", "--format", default="ogg", dest="output_format")
-o.add_option(      "--list-formats", action="store_true", dest="list_formats")
-o.add_option(      "--list-encodings", dest="encoding_list")
+o.add_option("--list-formats", action="store_true", dest="list_formats")
+o.add_option("--list-encodings", dest="encoding_list")
 o.add_option("-o", "--output", dest="output_filename")
 o.add_option("-v", "--verbose", action="store_true", dest="verbose")
 (opts, args) = o.parse_args()
@@ -41,6 +42,6 @@ if opts.input_filename is not None:
         for line in f:
             if opts.verbose:
                 print line
-            m.encode_message(line)
+            m.encode(line)
 elif len(args) != 0:
-    m.encode_message(" ".join(args))
+    m.encode(" ".join(args))

@@ -1,0 +1,357 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. Morse API &mdash; MorseCode 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="MorseCode 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="4. Changes" href="changes.html" />
+    <link rel="prev" title="Introduction" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="changes.html" title="4. Changes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">MorseCode 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-morse.code">
+<span id="morse-api"></span><h1>1. Morse API<a class="headerlink" href="#module-morse.code" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-morse.code"></span><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">morse.code</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">morse</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">TelegraphPrinter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;SMS SMS&quot;</span><span class="p">)</span>
+<span class="go">&#39;...--...   ...--...&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">morse</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">TelegraphWriter</span><span class="p">(</span><span class="s">&quot;test.ogg&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;SMS SMS&quot;</span><span class="p">)</span>
+<span class="go">Exports the Morse for &quot;SMS SMS&quot; to test.ogg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">morse</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">TelegraphPlayer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;SMS SMS&quot;</span><span class="p">)</span>
+<span class="go">Plays the Morse for &quot;SMS SMS&quot; to test.ogg</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="telegraph">
+<h1>2. Telegraph<a class="headerlink" href="#telegraph" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="morse.code.Telegraph">
+<em class="property">class </em><tt class="descclassname">morse.code.</tt><tt class="descname">Telegraph</tt><big>(</big><em>morse_alphabet='international'</em><big>)</big><a class="headerlink" href="#morse.code.Telegraph" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This class is used primarily as a parent class to be inherited from. Please see <a class="reference internal" href="#morse.code.TelegraphWriter" title="morse.code.TelegraphWriter"><tt class="xref py py-class docutils literal"><span class="pre">TelegraphWriter</span></tt></a>
+,:class:<cite>TelegraphPlayer</cite> OR <tt class="xref py py-class docutils literal"><span class="pre">TelegraphPrinter</span></tt>. It is created as a &#8220;new style&#8221; class.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>morse_alphabet</strong> &#8211; (str) Name of alphabet encoding to be used.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="morse.code.Telegraph.generate_code">
+<tt class="descname">generate_code</tt><big>(</big><em>character</em>, <em>ignore_unknown=True</em><big>)</big><a class="headerlink" href="#morse.code.Telegraph.generate_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Morse encoding of a character, according to the configured alphabet</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>character</strong> &#8211; (str) Character to be encoded</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">&#8216;.-&#8216; encoding of character</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">String</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; If a single character is not passed</li>
+<li><strong>CharacterNotFound</strong> &#8211; if ignore_unknown is set to False and a character is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="morse.code.Telegraph.generate_tones">
+<tt class="descname">generate_tones</tt><big>(</big><em>frequency=660</em>, <em>wpm=20</em>, <em>rate=44100</em><big>)</big><a class="headerlink" href="#morse.code.Telegraph.generate_tones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate character tones</p>
+<p>The &#8216;.&#8217; and &#8216;-&#8216; Morse characters are represented by a NumPy array data structure. The structure, and the tone
+are affected by the frequency of the &#8216;note&#8217; (the default, 660Hz is the musical note &#8216;A&#8217;), the Words Per Minute
+(the number of words per minute defines how long each tone will be) and the sample rate (the frequency at which
+the tone is passed to the sound card).</p>
+<p>When an instance of a subclass of the <cite>class:Telegraph</cite> is created the tones can be regenerated. For example, to
+change the note to a middle C (frequency 262Hz), with a slower WPM rate</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">morse</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">TelegraphPlayer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">generate_tones</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="mi">262</span><span class="p">,</span> <span class="n">wpm</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>frequency</strong> &#8211; (int) Tone frequency. Default 660Hz is &#8216;A&#8217;</li>
+<li><strong>wpm</strong> &#8211; (int) Words per minute. Determines the length of a &#8216;.&#8217; and &#8216;-&#8216;.</li>
+<li><strong>rate</strong> &#8211; (int) Sample rate.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="morse.code.Telegraph.get_tone">
+<tt class="descname">get_tone</tt><big>(</big><em>character</em>, <em>ignore_unknown=True</em><big>)</big><a class="headerlink" href="#morse.code.Telegraph.get_tone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Morse Code NumPy Array for a character</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>character</strong> &#8211; (str) alphabetic character, in the range A-Z, a-z and 0-9</li>
+<li><strong>ignore_unknown</strong> &#8211; (bool) Return a blank character if the character is not found, or raise an
+CharacterNotFound exception</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><strong>TypeError</strong> &#8211; If a single character is not passed</li>
+<li><strong>CharacterNotFound</strong> &#8211; if ignore_unknown is set to False and a character is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="morse.code.Telegraph.silence">
+<tt class="descname">silence</tt><big>(</big><big>)</big><a class="headerlink" href="#morse.code.Telegraph.silence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the data structure for a tones length of silence.</p>
+<p>This can be used to populate the gaps between characters (2 &#8216;.&#8217; tones) or the gap between words (5 &#8216;.&#8217; tones)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a single &#8216;.&#8217; tones worth of silence.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">NumPy array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="telegraphwriter">
+<h2>2.1. TelegraphWriter<a class="headerlink" href="#telegraphwriter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="morse.code.TelegraphWriter">
+<em class="property">class </em><tt class="descclassname">morse.code.</tt><tt class="descname">TelegraphWriter</tt><big>(</big><em>filename</em>, <em>audio_format='ogg'</em>, <em>audio_encoding='vorbis'</em>, <em>alphabet='international'</em><big>)</big><a class="headerlink" href="#morse.code.TelegraphWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#morse.code.Telegraph" title="morse.code.Telegraph"><tt class="xref py py-class docutils literal"><span class="pre">morse.code.Telegraph</span></tt></a></p>
+<p>Write Morse Code to an Audio File. TelegraphWriter uses SndFile from the scikits.audiolab package to write out
+audio data,  and as such TelegraphWriter can output to whatever formats are available. See the
+<tt class="xref py py-func docutils literal"><span class="pre">available_file_formats()</span></tt> and <tt class="xref py py-func docutils literal"><span class="pre">available_encodings()</span></tt> to determine what audio outputs are available.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> &#8211; (str) Filename to output to</li>
+<li><strong>audio_format</strong> &#8211; (str) Audio format</li>
+<li><strong>audio_encoding</strong> &#8211; (str) Encoding of audio_format</li>
+<li><strong>alphabet</strong> &#8211; (str) Morse Code alphabet to be used</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises InvalidFormatEncoding:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The default format and encoding is ogg vorbis (<a class="reference external" href="http://www.vorbis.com">http://www.vorbis.com</a>). This produces good quality compressed
+files, but is slower that (say) WAV 16pcm</p>
+<dl class="method">
+<dt id="morse.code.TelegraphWriter.encode">
+<tt class="descname">encode</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#morse.code.TelegraphWriter.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a message to the output file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> &#8211; (str) Message to be written</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises CharacterNotFound:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">if ignore_unknown is set to False and a character is not found</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="telegraphplayer">
+<h2>2.2. TelegraphPlayer<a class="headerlink" href="#telegraphplayer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="morse.code.TelegraphPlayer">
+<em class="property">class </em><tt class="descclassname">morse.code.</tt><tt class="descname">TelegraphPlayer</tt><big>(</big><em>morse_alphabet='international'</em><big>)</big><a class="headerlink" href="#morse.code.TelegraphPlayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#morse.code.Telegraph" title="morse.code.Telegraph"><tt class="xref py py-class docutils literal"><span class="pre">morse.code.Telegraph</span></tt></a></p>
+<p>Play the Morse Code through the audio device</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>alphabet</strong> &#8211; (str) Morse Code alphabet to be used</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="morse.code.TelegraphPlayer.encode">
+<tt class="descname">encode</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#morse.code.TelegraphPlayer.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Play a message to the output device.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> &#8211; (str) Message to be played</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises CharacterNotFound:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">if ignore_unknown is set to False and a character is not found</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="exceptions">
+<h1>3. Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="morse.code.CharacterNotFound">
+<em class="property">class </em><tt class="descclassname">morse.code.</tt><tt class="descname">CharacterNotFound</tt><big>(</big><em>char</em><big>)</big><a class="headerlink" href="#morse.code.CharacterNotFound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception returned if an encoding is not available for a character</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="morse.code.InvalidFormatEncoding">
+<em class="property">class </em><tt class="descclassname">morse.code.</tt><tt class="descname">InvalidFormatEncoding</tt><big>(</big><em>audio_format=None</em>, <em>audio_encoding=None</em><big>)</big><a class="headerlink" href="#morse.code.InvalidFormatEncoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception returned if an encoding is not available for an audio format</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. Morse API</a></li>
+<li><a class="reference internal" href="#telegraph">2. Telegraph</a><ul>
+<li><a class="reference internal" href="#telegraphwriter">2.1. TelegraphWriter</a></li>
+<li><a class="reference internal" href="#telegraphplayer">2.2. TelegraphPlayer</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exceptions">3. Exceptions</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="changes.html"
+                        title="next chapter">4. Changes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/morse.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="changes.html" title="4. Changes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="index.html">MorseCode 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Tyndyll.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+  </body>
+</html>

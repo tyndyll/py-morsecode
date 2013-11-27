@@ -1,30 +1,6 @@
 #/usr/bin/env python
-# Copyright (c) 2013, Tyndyll
-# All rights reserved.
-# 
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met: 
-# 
-# 1. Redistributions of source code must retain the above copyright notice, this
-#    list of conditions and the following disclaimer. 
-# 2. Redistributions in binary form must reproduce the above copyright notice,
-#    this list of conditions and the following disclaimer in the documentation
-#    and/or other materials provided with the distribution. 
-# 
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-# 
-# The views and conclusions contained in the software and documentation are those
-# of the authors and should not be interpreted as representing official policies, 
-# either expressed or implied, of the FreeBSD Project.
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
 
 """
 .. module:: morse.code
@@ -33,7 +9,16 @@
 
 .. moduleauthor:: Tyndyll <morse@tyndyll.net>
 
-
+>>> import morse.code
+>>> p = morse.code.TelegraphPrinter()
+>>> p.encode("SMS SMS")
+'...--...   ...--...'
+>>> w = morse.code.TelegraphWriter("test.ogg")
+>>> w.encode("SMS SMS")
+Exports the Morse for "SMS SMS" to test.ogg
+>>> p = morse.code.TelegraphPlayer()
+>>> p.encode("SMS SMS")
+Plays the Morse for "SMS SMS" to test.ogg
 """
 
 import alphabet
@@ -64,42 +49,77 @@ class InvalidFormatEncoding(Exception):
 
 
 class Telegraph(object):
-    """Base Telegraph Class
-
-    .. note::
+    """
+    .. warning::
 
        This class is used primarily as a parent class to be inherited from. Please see :class:`TelegraphWriter`
-       or :class:`TelegraphPlayer`. It is created as a "new style" class.
+       ,:class:`TelegraphPlayer` OR :class:`TelegraphPrinter`. It is created as a "new style" class.
 
+    :param morse_alphabet: (str) Name of alphabet encoding to be used.
     """
 
     __codes = None
     __alphabet = None
+    __alphabet_codes = None
 
     def __init__(self, morse_alphabet="international"):
-        """Initialisation. 
-
-        Args:
-            alphabet (str): Name of alphabet encodig to be used. See TODO
-
-        """
         self.__alphabet = morse_alphabet
+        self.__alphabet_codes = alphabet.get_alphabet(self.__alphabet)
+
+    def _clean_message(self, message):
+        """Internal function to clean a message
+
+        Upper cases message, TODO remove extra whitespace
+        :param message: (str) Message to be cleaned
+        :return message: (str) Cleaned message
+        :rtype: (str) String
+        """
+        message = message.upper()
+        return message
+
+    def generate_code(self, character, ignore_unknown=True):
+        """Return the Morse encoding of a character, according to the configured alphabet
+
+        :param character: (str) Character to be encoded
+        :return: '.-' encoding of character
+        :rtype: String
+        :raise TypeError: If a single character is not passed
+        :raise CharacterNotFound: if ignore_unknown is set to False and a character is not found
+        """
+        character = self._clean_message(character)
+        if character in self.__alphabet_codes:
+            return self.__alphabet_codes[character]
+        else:
+            if ignore_unknown:
+                return " "
+            else:
+                raise CharacterNotFound
 
     def generate_tones(self, frequency=660, wpm=20, rate=44100):
-        """Utility function to generate character generate_tones
+        """Generate character tones
 
-        Args:
-            frequency (int): Tone frequency. Default 660Hz is 'A' TODO
-            wpm (int): Words per minute. Determines the length of a '.' and '-'. Higher wpm rates 
-                        require shorter tones
-            rate (int): Sample rate. 
+        The '.' and '-' Morse characters are represented by a NumPy array data structure. The structure, and the tone
+        are affected by the frequency of the 'note' (the default, 660Hz is the musical note 'A'), the Words Per Minute
+        (the number of words per minute defines how long each tone will be) and the sample rate (the frequency at which
+        the tone is passed to the sound card).
+
+        When an instance of a subclass of the `class:Telegraph` is created the tones can be regenerated. For example, to
+        change the note to a middle C (frequency 262Hz), with a slower WPM rate
+
+        >>> p = morse.code.TelegraphPlayer()
+        >>> p.generate_tones(frequency=262, wpm=10)
+
+        :param frequency: (int) Tone frequency. Default 660Hz is 'A'
+        :param wpm: (int) Words per minute. Determines the length of a '.' and '-'.
+        :param rate: (int) Sample rate.
         """
-
+        wpm = int(wpm)
+        frequency = int(frequency)
         # PARIS duration standard. See http://en.wikipedia.org/wiki/Morse_code
         length = (1200.0 / wpm) / 1000
 
         # Create a silent tone with the appropriate length
-        self.__codes = { " ": self.__note(0,length, rate) }
+        self.__codes = { " ": self.__note(0, length, rate) }
         # Create a blank tone to set the data structure
         self.__codes["BLANK"] = self.__note(0, 0, rate)
         for letter, coding in alphabet.get_alphabet(self.__alphabet).items():
@@ -114,29 +134,31 @@ class Telegraph(object):
             self.__codes[letter] = morse_pattern
 
     def __note(self, frequency, length, rate):
-        """Internal function to generate the data structure for the frequency, rate and length"""
+        """Internal function to generate the data structure for the frequency, rate and length
+
+        :param frequency: (int) Tone frequency. Default 660Hz is 'A'
+        :param wpm: (int) Words per minute. Determines the length of a '.' and '-'.
+        :param rate: (int) Sample rate.
+        :return: NumPy data structure
+        """
         data = sin(linspace(0, length * frequency * 2 * pi, round(length * rate)))
         return data.astype(float64)
 
-    def get_character(self, character, ignore_unknown=True):
-        """Return the Morse Code string for a character
+    def get_tone(self, character, ignore_unknown=True):
+        """Return the Morse Code NumPy Array for a character
 
-        Args:
-            character (str): alphabetic character, in the range A-Z, a-z and 0-9
-            ignore_unknown (bool): Return a blank character if the character is not found, 
-                                    or raise an Exception
-        Returns:
-            encoded_character (str): '.-' encoding of character
-
-        Raises: 
-            TypeError: If a single character is not passed
-            CharacterNotFound: if ignore_unknown is set to False and a character is not found
+        :param character: (str) alphabetic character, in the range A-Z, a-z and 0-9
+        :param ignore_unknown: (bool) Return a blank character if the character is not found, or raise an
+            CharacterNotFound exception
+        :raise TypeError: If a single character is not passed
+        :raise CharacterNotFound: if ignore_unknown is set to False and a character is not found
         """
+
         if self.__codes is None:
             self.generate_tones()
         character = character.upper()
         char_int = ord(character)
-        if (48 <= char_int and char_int <= 57) or (65 <= char_int and char_int <= 90):
+        if (48 <= char_int <= 57) or (65 <= char_int <= 90):
             return self.__codes[character]
         else:
             if ignore_unknown:
@@ -147,11 +169,11 @@ class Telegraph(object):
     def _encode_message(self, message, output):
         """Encode a message into generated tones and output
 
-        Args:
-            message (str): String to be encoded
-            output (func): function which will be used to output the generated tones
+        :param message: (str) String to be encoded
+        :return: (func) function which will be used to output the generated tones
+        :rtype: Function
 
-        .. note::
+        .. warning::
 
         This method is primarily for use by the child classes TelegraphPlayer and TelegraphWriter, 
         but any function can be passed in if it can handle the data structures containing the 
@@ -167,41 +189,38 @@ class Telegraph(object):
                 for i in xrange(5):
                     output(self.silence())
             else:
-                output(self.get_character(letter))
+                output(self.get_tone(letter))
                 for i in xrange(2):
                     output(self.silence())        
 
-    
     def silence(self):
-        """Return the data structure for a tones length of silence"""
+        """Return the data structure for a tones length of silence.
+
+        This can be used to populate the gaps between characters (2 '.' tones) or the gap between words (5 '.' tones)
+
+        :return: a single '.' tones worth of silence.
+        :rtype: NumPy array
+        """
         return self.__codes[" "]
 
 
 class TelegraphWriter(Telegraph):
+    """Write Morse Code to an Audio File. TelegraphWriter uses SndFile from the scikits.audiolab package to write out
+    audio data,  and as such TelegraphWriter can output to whatever formats are available. See the
+    :func:`available_file_formats` and :func:`available_encodings` to determine what audio outputs are available.
 
-    """Write Morse Code to an Audio File
+    :param filename: (str) Filename to output to
+    :param audio_format: (str) Audio format
+    :param audio_encoding: (str) Encoding of audio_format
+    :param alphabet: (str) Morse Code alphabet to be used
+    :raise InvalidFormatEncoding:
 
-    Encode text as Morse Code into an audio file
+    The default format and encoding is ogg vorbis (http://www.vorbis.com). This produces good quality compressed
+    files, but is slower that (say) WAV 16pcm
     """
 
     def __init__(self, filename, audio_format="ogg", audio_encoding="vorbis", alphabet="international"):
-        """Constructor
-
-        Args:
-            filename (str): Filename to output to
-            audio_format (str): Audio format
-            audio_encoding (str): Encoding of audio_format
-            alphabet (str): Morse Code alphabet to be used
-
-        TelegraphWriter uses SndFile from the scikits.audiolab package to write out audio data, 
-        and as such TelegraphWriter can output to whatever formats are available. See the 
-        :func:`available_file_formats` and :func:`available_encodings to determine what audio
-        outputs are available.
-
-        The default format and encoding is ogg vorbis (http://www.vorbis.com). This produces 
-        good quality compressed files, but is slower that (say) WAV 16pcm
-        """
-        super(TelegraphWriter, self).__init__(alphabet)        
+        super(TelegraphWriter, self).__init__(alphabet)
         self.__filename = filename        
         self.__audio_format = audio_format
         self.__audio_encoding = audio_encoding
@@ -214,55 +233,69 @@ class TelegraphWriter(Telegraph):
         output_format = Format(self.__audio_format, self.__audio_encoding)
         self.__output_file = Sndfile(self.__filename, 'w', output_format, 1, 44100)
 
-    def encode_character(self, character):
+    def __write_character(self, character):
         """Write a character to the output file. 
 
-        Args:
-            character (str): Character to be written
-
-        Raises: 
-            TypeError: If a single character is not passed
-            CharacterNotFound: if ignore_unknown is set to False and a character is not found
+        :param character: (str) Character to be written
+        :raise TypeError: If a single character is not passed
+        :raise CharacterNotFound: if ignore_unknown is set to False and a character is not found
         """
-        self.__output_file.write_frames(self.get_character(character))
+        self.__output_file.write_frames(character)
 
-    def encode_message(self, message):
+    def encode(self, message):
         """Write a message to the output file. 
 
-        Args:
-            message (str): Message to be written
-
-        Raises:             
-            CharacterNotFound: if ignore_unknown is set to False and a character is not found
+        :param message: (str) Message to be written
+        :raise CharacterNotFound: if ignore_unknown is set to False and a character is not found
         """
-        super(TelegraphWriter, self).encode_message(message, self.encode_character)
+        super(TelegraphWriter, self)._encode_message(self._clean_message(message), self.__write_character)
         self.__output_file.sync()
 
 
 class TelegraphPlayer(Telegraph):
+    """Play the Morse Code through the audio device
 
-    def __init__(self, alphabet="international"):
-        """
+    :param alphabet: (str) Morse Code alphabet to be used
+    """
 
-        """
-        super(TelegraphPlayer, self).__init__(alphabet)        
+    def __init__(self, morse_alphabet="international"):
+        super(TelegraphPlayer, self).__init__(morse_alphabet)
 
-    def encode_character(self, character):
+    def __play_character(self, character):
         """Play a character through the audio device
 
-        Args:
-            character (str): Character to be played
-
-        Raises: 
-            TypeError: If a single character is not passed
+        :param character: (str) Character to be played
+        :raise TypeError: If a single character is not passed
         """
         play(character)
 
-    def encode_message(self, message):
-        """Play a message through the audio device
+    def encode(self, message):
+        """Play a message to the output device.
 
-        Args:
-            message (str): Message to be played
-
+        :param message: (str) Message to be played
+        :raise CharacterNotFound: if ignore_unknown is set to False and a character is not found
         """
-        super(TelegraphPlayer, self)._encode_message(message, self.encode_character)
+        super(TelegraphPlayer, self)._encode_message(self._clean_message(message), self.__play_character)
+
+
+class TelegraphPrinter(Telegraph):
+    """Convert ASCII text to Morse encoding
+    :param alphabet: (str) Morse Code alphabet to be used
+    """
+
+    def __init__(self, morse_alphabet="international"):
+        super(TelegraphPrinter, self).__init__(morse_alphabet)
+
+    def encode(self, message):
+        """Return the provided ASCII string as an encoded Morse string
+
+        :param message: (str) Message to be played
+        :raise CharacterNotFound: if ignore_unknown is set to False and a character is not found
+        """
+        msg = ""
+        for i in self._clean_message(message):
+            if i == " ":
+                msg += "   "
+            else:
+                msg += self.generate_code(i)
+        return msg
