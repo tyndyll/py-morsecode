@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='MorseCode',
-    version='0.0.1',
+    version='0.0.2',
     author='Tyndyll',
     author_email='morse.code@tyndyll.net',
     packages=['morse'],
